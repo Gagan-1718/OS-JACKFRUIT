@@ -1,0 +1,110 @@
+## ⚡ How to Run (Quick Guide)
+
+Follow these steps to build and execute the mini container runtime.
+
+---
+
+### 1️⃣ Navigate to Project
+
+```bash
+cd OS-Jackfruit/boilerplate
+```
+
+---
+
+### 2️⃣ Build All Components
+
+```bash
+make
+```
+
+---
+
+### 3️⃣ Load Kernel Module
+
+```bash
+sudo insmod monitor.ko
+```
+
+Verify:
+
+```bash
+lsmod | grep monitor
+ls -l /dev/container_monitor
+```
+
+---
+
+### 4️⃣ Start Supervisor
+
+```bash
+cd ~/OS-Jackfruit
+sudo ./boilerplate/engine supervisor ./rootfs-base
+```
+
+Expected Output:
+
+```
+Supervisor ready...
+mount proc OK
+chroot OK
+```
+
+---
+
+### 5️⃣ Run a Basic Container
+
+```bash
+cd ~/OS-Jackfruit/boilerplate
+sudo ./engine start c1 ../rootfs-alpha "/bin/sleep 120"
+```
+
+Check running containers:
+
+```bash
+sudo ./engine ps
+```
+
+---
+
+### 6️⃣ Logging Demo
+
+```bash
+sudo ./engine start logtest ../rootfs-alpha "/bin/sh /test.sh"
+sudo ./engine logs logtest
+```
+
+---
+
+### 7️⃣ CPU Stress Test
+
+```bash
+sudo ./engine start cpu1 ../rootfs-alpha "/cpu_hog"
+sudo ./engine logs cpu1
+```
+
+---
+
+### 8️⃣ Memory Stress Test
+
+```bash
+sudo ./engine start memtest ../rootfs-alpha "/memory_hog --soft-mib 2 --hard-mib 10"
+sleep 5
+sudo dmesg | grep LIMIT
+```
+
+---
+
+### 9️⃣ Cleanup
+
+```bash
+sudo rmmod monitor
+dmesg | grep "Module unloaded"
+```
+
+---
+
+✅ Ensure you run all commands with proper root permissions (`sudo`)
+✅ Make sure `rootfs-alpha` and `rootfs-base` directories exist
+
+---
